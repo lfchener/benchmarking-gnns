@@ -7,7 +7,12 @@ import torch.nn as nn
 import math
 import dgl
 
-from train.metrics import accuracy_SBM as accuracy
+#from train.metrics import accuracy_SBM as accuracy
+
+def accuracy(logits, labels):
+    _, pred_labels = torch.max(logits, dim=1)
+    correct = torch.sum(pred_labels == labels)
+    return correct.item() * 1.0 / len(labels)
 
 """
     For GCNs

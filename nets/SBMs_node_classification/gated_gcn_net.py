@@ -39,7 +39,6 @@ class GatedGCNNet(nn.Module):
         self.layers = nn.ModuleList([ GatedGCNLayer(hidden_dim, hidden_dim, dropout,
                                                     self.batch_norm, self.residual) for _ in range(n_layers) ])
         self.MLP_layer = MLPReadout(hidden_dim, n_classes)
-        
 
     def forward(self, g, h, e, h_pos_enc=None):
 
@@ -65,7 +64,7 @@ class GatedGCNNet(nn.Module):
         # calculating label weights for weighted loss computation
         V = label.size(0)
         label_count = torch.bincount(label)
-        label_count = label_count[label_count.nonzero()].squeeze()
+        label_count = label_count[label_count.nonzero(as_tuple = False)].squeeze()
         cluster_sizes = torch.zeros(self.n_classes).long().to(self.device)
         cluster_sizes[torch.unique(label)] = label_count
         weight = (V - cluster_sizes).float() / V
